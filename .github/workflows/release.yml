@@ -1,0 +1,33 @@
+name: Release APK
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Set up JDK
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+    
+    - name: Build APK
+      run: |
+        echo "Building APK..."
+        echo "TODO: Add build steps"
+      
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: release/*.apk
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
