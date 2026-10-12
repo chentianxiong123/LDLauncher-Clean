@@ -1,0 +1,48 @@
+# 操作系统文件
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE 配置
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# 编译输出（排除 release 目录中的 APK）
+!release/*.apk
+*.aab
+*.dex
+*.jar
+*.class
+
+# 临时文件
+*.tmp
+*.temp
+*.bak
+*.log
+
+# 签名文件
+*.keystore
+*.jks
+
+# 构建目录
+build/
+dist/
+out/
+apktool/
+
+# 文档导出
+ui.xml
+logcat.txt
+diagnose_output.txt
+
+# 大型文件
+*.zip
+*.rar
+*.7z
+*.tar.gz
+*.iso
+
+# 注意：release/ 目录中的 APK 应该提交到 Git
+# 但大型文件可以考虑使用 Git LFS
