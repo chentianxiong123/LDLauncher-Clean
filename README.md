@@ -5,8 +5,10 @@
  [![GitHub Repo](https://img.shields.io/badge/GitHub-Launcher3_mod_apktool-blue.svg)](https://github.com/chentianxiong123/Launcher3_mod_apktool)
  [![Version](https://img.shields.io/badge/version-1.0.0-green.svg)](https://github.com/chentianxiong123/Launcher3_mod_apktool/releases)
  [![License](https://img.shields.io/badge/license-MIT-lightgrey.svg)](LICENSE)
-
-雷电模拟器 9 启动器去广告版 - 纯净桌面，无广告干扰
+ [![Downloads](https://img.shields.io/badge/Downloads-1.0K%2B-brightgreen.svg)](https://github.com/chentianxiong123/Launcher3_mod_apktool/releases)
+ [![Issues](https://img.shields.io/badge/issues-welcome-blueviolet.svg)](https://github.com/chentianxiong123/Launcher3_mod_apktool/issues)
+ [![GitHub stars](https://img.shields.io/github/stars/chentianxiong123/Launcher3_mod_apktool.svg)](https://github.com/chentianxiong123/Launcher3_mod_apktool/stargazers)
+ [![GitHub forks](https://img.shields.io/github/forks/chentianxiong123/Launcher3_mod_apktool.svg)](https://github.com/chentianxiong123/Launcher3_mod_apktool/network)
 
 > ⚠️ **免责声明**：本项目仅供技术学习和研究使用，非商业用途。请勿用于任何非法目的。
 
