@@ -1,4 +1,10 @@
-# LDLauncher-Clean
+ # LDLauncher-Clean
+ 
+ 雷电模拟器 9 启动器去广告版 - 纯净桌面，无广告干扰
+ 
+ [![GitHub Repo](https://img.shields.io/badge/GitHub-Launcher3_mod_apktool-blue.svg)](https://github.com/chentianxiong123/Launcher3_mod_apktool)
+ [![Version](https://img.shields.io/badge/version-1.0.0-green.svg)](https://github.com/chentianxiong123/Launcher3_mod_apktool/releases)
+ [![License](https://img.shields.io/badge/license-MIT-lightgrey.svg)](LICENSE)
 
 雷电模拟器 9 启动器去广告版 - 纯净桌面，无广告干扰
 
