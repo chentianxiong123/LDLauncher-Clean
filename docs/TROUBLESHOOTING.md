@@ -145,34 +145,64 @@ adb logcat -d | findstr "AndroidRuntime\|FATAL"
 adb shell am force-stop com.android.launcher3.mod
 adb shell am start -n com.android.launcher3.mod/com.android.launcher3.Launcher
 ```
-
----
-
-### 问题 7：设置为默认启动器失败
-
-**错误信息**：
-```
-adb shell pm set-home-activity ...
-Error: can't set default home activity
-```
-
-**原因**：系统限制或权限不足
-
-**解决方案**：
-```bash
-# 方法 1：禁用原版启动器
-adb shell pm disable-user --user 0 com.android.launcher3
-
-# 方法 2：使用 Settings 命令
-adb shell settings put system home_package com.android.launcher3.mod
-
-# 方法 3：通过模拟器界面设置
-# 长按桌面 → 设置 → 默认桌面 → 选择修改版
-```
-
----
-
-## 广告残留
+ ### 问题 7：开机每次询问选择启动器
+ 
+ **症状**：重启模拟器后弹出选择启动器对话框，选"始终"也无效
+ 
+ **原因**：默认启动器设置未持久化
+ 
+ **解决方案**（三管齐下）：
+ ```bash
+ # 1. 设置 system 级别
+ adb shell "settings put system home_package com.android.launcher3.mod"
+ 
+ # 2. 设置 secure 级别
+ adb shell "settings put secure home_package com.android.launcher3.mod"
+ 
+ # 3. 使用 cmd package 命令
+ adb shell "cmd package set-home-activity com.android.launcher3.mod/com.android.launcher3.Launcher"
+ ```
+ 
+ **验证设置**：
+ ```bash
+ adb shell "settings get system home_package"
+ # 应该返回：com.android.launcher3.mod
+ ```
+ 
+ **恢复原版默认**：
+ ```bash
+ adb shell "settings put system home_package com.android.launcher3"
+ adb shell "settings put secure home_package com.android.launcher3"
+ ```
+ 
+ ---
+ 
+ ### 问题 8：顶部仍有搜索放大镜
+ 
+ **症状**：修改后搜索图标仍然显示
+ 
+ **原因**：布局文件未正确修改
+ 
+ **解决方案**：
+ ```bash
+ # 1. 确保修改了所有布局变体
+ # 共 9 个文件：
+ # - res/layout/search_view_layout.xml
+ # - res/layout-land/search_view_layout.xml
+ # - res/layout-land-v22/search_view_layout.xml
+ # - res/layout-port/search_view_layout.xml
+ # - res/layout-sw600dp-port/search_view_layout.xml
+ # - res/layout-sw600dp-port-v22/search_view_layout.xml
+ # - res/layout-sw720dp/search_view_layout.xml
+ # - res/layout-sw720dp-v22/search_view_layout.xml
+ # - res/layout-v22/search_view_layout.xml
+ 
+ # 2. 清除应用数据
+ adb shell pm clear com.android.launcher3.mod
+ 
+ # 3. 重新启动
+ adb shell am start -n com.android.launcher3.mod/com.android.launcher3.Launcher
+ ```
 
 ### 问题 8：顶部仍有搜索放大镜
 

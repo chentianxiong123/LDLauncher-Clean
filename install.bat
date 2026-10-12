@@ -58,33 +58,41 @@ echo [3/5] 清除应用数据（确保干净启动）...
 adb shell pm clear com.android.launcher3.mod >nul 2>nul
 echo [OK] 数据已清除
 
-REM 启动修改后的启动器
-echo [4/5] 启动修改后的启动器...
-adb shell am start -n com.android.launcher3.mod/com.android.launcher3.Launcher
-if %errorlevel% neq 0 (
-    echo [警告] 启动失败，但安装已成功
-) else (
-    echo [OK] 启动器已启动
-)
-
-REM 提示设置默认启动器
-echo [5/5] 完成！
-echo.
-echo ========================================
-echo   安装完成！
-echo ========================================
-echo.
-echo 修改后的启动器已安装并启动。
-echo.
-echo 可选操作：
-echo   1. 设置为默认启动器（开机自动使用）：
-echo      adb shell pm set-home-activity com.android.launcher3.mod/com.android.launcher3.Launcher
-echo.
-echo   2. 禁用原版启动器：
-echo      adb shell pm disable-user --user 0 com.android.launcher3
-echo.
-echo 注意：重启模拟器后可能需要重新设置默认启动器
-echo.
-echo ========================================
+ REM 启动修改后的启动器
+ echo [4/6] 启动修改后的启动器...
+ adb shell am start -n com.android.launcher3.mod/com.android.launcher3.Launcher
+ if %errorlevel% neq 0 (
+     echo [警告] 启动失败，但安装已成功
+ ) else (
+     echo [OK] 启动器已启动
+ )
+ 
+ REM 设置默认启动器（关键步骤 - 防止开机询问）
+ echo [5/6] 设置默认启动器...
+ adb shell "settings put system home_package com.android.launcher3.mod" >nul 2>nul
+ adb shell "settings put secure home_package com.android.launcher3.mod" >nul 2>nul
+ adb shell "cmd package set-home-activity com.android.launcher3.mod/com.android.launcher3.Launcher" >nul 2>nul
+ echo [OK] 默认启动器已设置
+ 
+ REM 验证设置
+ echo [6/6] 验证设置...
+ set DEFAULT_LAUNCHER=%adb shell "settings get system home_package"%
+ echo 当前默认启动器：%DEFAULT_LAUNCHER%
+ 
+ REM 完成
+ echo.
+ echo ========================================
+ echo   安装完成！
+ echo ========================================
+ echo.
+ echo 修改后的启动器已安装并设置为默认。
+ echo.
+ echo ✅ 重启模拟器后不会再询问选择启动器
+ echo ✅ 原版启动器已保留但设为非默认
+ echo.
+ echo 如需恢复原版默认启动器：
+ echo   adb shell "settings put system home_package com.android.launcher3"
+ echo.
+ echo ========================================
 
 pause
