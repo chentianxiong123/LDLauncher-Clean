@@ -342,6 +342,57 @@ copy /y C:\leidian\LDPlayer9\dnplayer.exe.bak C:\leidian\LDPlayer9\dnplayer.exe
 
 ---
 
+## 网络层阻断（hosts，纵深防御）
+
+> 二进制补丁是主方案，hosts 仅作**纵深防御**（防止广告资源被下载/预取）。
+> 原始版经 hosts 阻断后仍残留部分广告（本地缓存素材），补丁版完全无广告。
+
+### 当前阻断清单（16 条，已验证生效）
+
+```
+# ldmnq.com 系（12 条）
+0.0.0.0 ad.ldmnq.com
+0.0.0.0 partner.ldmnq.com
+0.0.0.0 api.ldmnq.com
+0.0.0.0 www.ldmnq.com
+0.0.0.0 res.ldmnq.com
+0.0.0.0 mnq-service.ldmnq.com
+0.0.0.0 middledata.ldmnq.com
+0.0.0.0 service.ldmnq.com
+0.0.0.0 cdn.ldmnq.com
+0.0.0.0 activity-service.ldmnq.com   ← 活动/广告服务（扫描补充）
+0.0.0.0 dist.ldmnq.com               ← 商店推广下载（扫描补充）
+0.0.0.0 ldq-service.ldmnq.com        ← 云同步回调（扫描补充）
+
+# leidian.com 系（4 条）
+0.0.0.0 ad.leidian.com
+0.0.0.0 partner.leidian.com
+0.0.0.0 cdn.leidian.com
+0.0.0.0 push.leidian.com
+```
+
+修改后 `ipconfig /flushdns` 生效。
+
+### 域名扫描方法（找漏网域名）
+
+用 Python 全量扫描 LDPlayer 自有模块中的完整 URL，过滤基础设施域名
+（digicert/symantec/verisign/virtualbox/microsoft 等证书与虚拟化服务）：
+
+```python
+# scan_focus_urls.py 核心
+url_re = re.compile(rb'https?://[^\x00-\x20\x7f"\']{4,200}')
+# 只扫 dnplayer.exe / dnplycore.dll / dnconsole.exe / ldplayerhelper.exe 等自有模块
+# KEEP 列表过滤：digicert.com, globalsign.com, symantec.com, verisign.com,
+#   entrust.net, microsoft.com, virtualbox.org, vmware.com, openssl.org ...
+```
+
+本次扫描发现的 LDPlayer 自有服务域名（全部已阻断）：
+`activity-service` / `dist` / `ldq-service` / `middledata` / `mnq-service` /
+`res` / `www` / `ad` / `partner` / `api` / `service` / `cdn`（ldmnq.com 系）
++ `ad` / `partner` / `cdn` / `push`（leidian.com 系）。
+
+---
+
 ## 快速定位方法总结（复用于新版）
 
 LDPlayer 升级后函数地址会漂移，但方法名（RTTI 字符串）是稳定的锚点：
