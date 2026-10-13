@@ -8,6 +8,7 @@
 2. [rebuild_apk.bat - 重新编译脚本](#rebuild_apkbat---重新编译脚本)
 3. [sign_apk.bat - 签名脚本](#sign_apkbat---签名脚本)
 4. [diagnose.bat - 诊断脚本](#diagnosebat---诊断脚本)
+5. [patch_dnplayer.py - Windows 客户端补丁脚本](#patch_dnplayerpy---windows-客户端补丁脚本)
 
 ---
 
@@ -405,6 +406,73 @@ pause
 
 ---
 
+## patch_dnplayer.py - Windows 客户端补丁脚本
+
+### 功能
+
+对雷电模拟器 9 的 Windows 客户端主程序 `dnplayer.exe` 打二进制补丁，
+在 9 个广告函数入口写入 `ret` 指令，使广告逻辑直接短路。
+
+### 使用场景
+
+- 去除客户端启动广告 / AppActive 弹窗广告 / 广告视频
+- LDPlayer 版本升级后重新适配补丁
+- 对照测试（还原原始版后恢复补丁）
+
+### 前置条件
+
+- ✅ Python 3 + pefile 库（`pip install pefile`）
+- ✅ `dnplayer.exe` 已退出（运行中会 PermissionError）
+- ✅ 首次运行前备份原始文件
+
+### 使用方法
+
+```bash
+:: 1. 退出 LDPlayer
+taskkill /F /IM dnplayer.exe /T
+
+:: 2. 备份（仅首次）
+copy /y C:\leidian\LDPlayer9\dnplayer.exe C:\leidian\LDPlayer9\dnplayer.exe.bak
+
+:: 3. 打补丁
+python scripts\patch_dnplayer.py
+
+:: 4. 启动测试
+start C:\leidian\LDPlayer9\dnplayer.exe
+```
+
+### 输出示例
+
+```
+PATCH _showLaunchAd            VA 0x4CE8A0 -> off 0xCDCA0 : c21400
+PATCH canShowAppActiveAD       VA 0x44BC30 -> off 0x4B030 : 31c0c20400
+PATCH preShowAppActiveAd       VA 0x44C360 -> off 0x4B760 : c20c00
+PATCH updateLaunchAdControl    VA 0x5E1F40 -> off 0x1E1340 : c3
+PATCH onLaunchAdBtnClicked     VA 0x4CDF90 -> off 0xCD390 : c3
+PATCH _checkShowNextLaunchAd   VA 0x4CF080 -> off 0xCE480 : c21400
+PATCH loadAppActiveAd          VA 0x44AEE0 -> off 0x4A2E0 : c3
+PATCH isVideoOK                VA 0x4C7600 -> off 0xC6A00 : 31c0c3
+PATCH downloadVid              VA 0x4C8080 -> off 0xC7480 : c3
+WROTE C:\leidian\LDPlayer9\dnplayer.exe (9 patches)
+```
+
+> 脚本**幂等**：重复运行会因前缀校验（原字节应为 `55 8B EC`）而全部 SKIP，
+> 不会重复打补丁或破坏已修补版本。
+
+### 版本切换
+
+```bat
+:: 用修改版
+copy /y C:\leidian\LDPlayer9\dnplayer-mod.exe C:\leidian\LDPlayer9\dnplayer.exe
+
+:: 还原原始版
+copy /y C:\leidian\LDPlayer9\dnplayer.exe.bak C:\leidian\LDPlayer9\dnplayer.exe
+```
+
+> 详细逆向分析见 [Windows 客户端破解指南](DNPLAYER_PATCH_GUIDE.md)
+
+---
+
 ## 脚本清单
 
 | 脚本 | 用途 | 运行时机 |
@@ -414,9 +482,10 @@ pause
 | `scripts\sign_apk.bat` | 签名 APK | 编译后 |
 | `scripts\diagnose.bat` | 诊断问题 | 出现问题时 |
 | `scripts\quick_check.bat` | 快速检查 | 安装后验证 |
+| `scripts\patch_dnplayer.py` | **dnplayer.exe 补丁** | 客户端广告去除 |
 
 ---
 
-**文档版本**：1.0.0  
-**最后更新**：2026-10-12  
-**脚本数量**：5 个核心脚本
+**文档版本**：1.1.0  
+**最后更新**：2026-10-13  
+**脚本数量**：6 个核心脚本

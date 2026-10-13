@@ -2,6 +2,25 @@
 
 本项目遵循 [Semantic Versioning](https://semver.org/)。
 
+## [1.1.0] - 2026-10-13
+
+### 新增
+- **Windows 客户端启动广告破解**（dnplayer.exe 二进制补丁）
+  - Ghidra 逆向：RTTI 方法名 → 函数本体 → 调用链分析
+  - 9 处广告函数入口 `ret` 短路（`patch_dnplayer.py`，幂等）
+  - 覆盖：启动广告、AppActive 弹窗广告、广告视频下载/播放、广告点击跳转
+- 新增文档 `docs/DNPLAYER_PATCH_GUIDE.md`（逆向技术原理与实现完整记录）
+- 新增脚本 `scripts/patch_dnplayer.py`
+- README 补充 Windows 客户端破解章节与对照测试说明
+
+### 修复
+- 无（基于 v1.0.0 增量）
+
+### 已知问题
+- LDPlayer 升级后函数地址漂移会导致补丁失效，需按文档"快速定位方法"重新适配
+
+---
+
 ## [1.0.0] - 2026-10-12
 
 ### 新增

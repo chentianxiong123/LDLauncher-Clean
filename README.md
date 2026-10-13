@@ -14,12 +14,26 @@
 
 ## 📋 项目简介
 
-本项目通过对雷电模拟器 9 的启动器（Launcher3）APK 进行反编译和修改，移除了其中的广告组件，包括：
+本项目针对雷电模拟器 9 的**两处广告来源**进行去除：
+
+### 1. Android 桌面启动器广告（Launcher3 APK）
+
+通过对雷电模拟器 9 的启动器（Launcher3）APK 进行反编译和修改，移除了其中的广告组件，包括：
 
 - ✅ 首屏广告
 - ✅ 底部游戏栏广告
 - ✅ 顶部搜索栏广告
 - ✅ 搜索放大镜图标
+
+### 2. Windows 客户端启动广告（dnplayer.exe 二进制补丁）
+
+通过对 Windows 客户端主程序 `dnplayer.exe`（6.8MB, x86 32-bit）进行 **Ghidra 逆向 + 二进制补丁**，在函数入口写入 `ret` 指令短路广告逻辑：
+
+- ✅ 启动加载全屏/横幅广告
+- ✅ 应用内弹窗广告（AppActive）
+- ✅ 广告视频下载与播放
+
+> 详细逆向技术原理见 [Windows 客户端破解指南](docs/DNPLAYER_PATCH_GUIDE.md)
 
 ## 🎯 功能特点
 
@@ -29,6 +43,9 @@
 | 底部游戏栏 | ❌ 有广告 | ✅ 纯净 |
 | 搜索栏广告 | ❌ 有 | ✅ 无 |
 | 搜索放大镜 | ❌ 有 | ✅ 无 |
+| 客户端启动广告 | ❌ 有 | ✅ 无 |
+| 客户端弹窗广告 | ❌ 有 | ✅ 无 |
+| 客户端视频广告 | ❌ 有 | ✅ 无 |
 | 桌面功能 | ✅ 完整 | ✅ 完整 |
 
 ## 📦 安装方法
@@ -104,10 +121,17 @@ adb shell pm set-home-activity com.android.launcher3.mod/com.android.launcher3.L
 ## 📚 文档
 
 - [修改指南](docs/MODIFICATION_GUIDE.md) - 详细的修改步骤和原理
+- [Windows 客户端破解指南](docs/DNPLAYER_PATCH_GUIDE.md) - dnplayer.exe 二进制补丁逆向全过程
 - [故障排查](docs/TROUBLESHOOTING.md) - 常见问题及解决方案
 - [脚本说明](docs/SCRIPTS.md) - 自动化脚本使用说明
 
 ## 🔄 更新日志
+
+### v1.1.0 (2026-10-13)
+- ✅ 新增 Windows 客户端启动广告破解（dnplayer.exe 二进制补丁）
+- ✅ 新增 [Windows 客户端破解指南](docs/DNPLAYER_PATCH_GUIDE.md)
+- ✅ 新增补丁脚本 `scripts/patch_dnplayer.py`（幂等，前缀校验）
+- ✅ 客户端启动/弹窗/视频广告全部去除（对照测试验证）
 
 ### v1.0.0 (2026-10-12)
 - ✅ 首次发布
@@ -139,6 +163,6 @@ adb shell pm set-home-activity com.android.launcher3.mod/com.android.launcher3.L
 
 ---
 
-**最后更新**：2026-10-12  
-**版本**：1.0.0  
+**最后更新**：2026-10-13  
+**版本**：1.1.0  
 **维护者**：LDLauncher-Clean Team
